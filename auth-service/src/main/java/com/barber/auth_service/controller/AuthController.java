@@ -40,4 +40,13 @@ public class AuthController {
             throw new RuntimeException("Invalid Password");
         }
     }
+
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        // In a real app, you MUST encrypt the password here!
+        // e.g., user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        user.setRole("USER"); // Default role
+        return userRepository.save(user);
+    }
 }

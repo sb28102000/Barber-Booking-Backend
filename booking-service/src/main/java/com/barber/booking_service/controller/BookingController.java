@@ -29,4 +29,16 @@ public class BookingController {
         appointment.setAppointmentTime(java.time.LocalDateTime.now()); // Default to "NOW" for simplicity
         return appointmentRepository.save(appointment);
     }
+
+    @GetMapping("/appointments")
+    public List<com.barber.booking_service.entity.Appointment> getAllAppointments() {
+        // In a real app, we would filter by 'customerName', but this works for now!
+        return appointmentRepository.findAll();
+    }
+
+    @DeleteMapping("/appointment/{id}")
+    public String deleteAppointment(@PathVariable Long id){
+        appointmentRepository.deleteById(id);
+        return "Delete Appointment Successfully.";
+    }
 }
