@@ -12,4 +12,10 @@ public class Barber {
     private Long id;
     private String name;
     private String specialty;
+    private String address;
+    private String description;
+    @Column(unique = true)
+    private String username;
+    private Double basePrice;
+    private String mobileNumber;
 }

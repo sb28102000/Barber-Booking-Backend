@@ -1,5 +1,6 @@
 package com.barber.booking_service.entity;
 
+import com.barber.booking_service.common.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,5 +17,9 @@ public class Appointment {
     private Long barberId;
     private String customerName; // We will grab this from the JWT later
     private LocalDateTime appointmentTime;
-    private String status; // e.g., "CONFIRMED"
+    @Enumerated(EnumType.STRING) // Saves as "CONFIRMED" in DB
+    private AppointmentStatus status;
+    private String purpose;
+    private Double price;
+    private String customerMobile;
 }

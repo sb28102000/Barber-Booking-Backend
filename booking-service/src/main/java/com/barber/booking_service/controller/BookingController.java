@@ -1,8 +1,11 @@
 package com.barber.booking_service.controller;
 
+import com.barber.booking_service.common.AppointmentStatus;
+import com.barber.booking_service.entity.Appointment;
 import com.barber.booking_service.entity.Barber;
 import com.barber.booking_service.repository.AppointmentRepository;
 import com.barber.booking_service.repository.BarberRepository;
+import com.barber.booking_service.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,32 +16,31 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class BookingController {
     @Autowired
-    private BarberRepository barberRepository;
-
-    @Autowired
-    private AppointmentRepository appointmentRepository;
+    private BookingService bookingService;
 
     @GetMapping("/barbers")
-    public List<Barber> getAllBarbers() {
-        return barberRepository.findAll();
-    }
-
-    @PostMapping("/book")
-    public com.barber.booking_service.entity.Appointment bookAppointment(@RequestBody com.barber.booking_service.entity.Appointment appointment) {
-        appointment.setStatus("CONFIRMED");
-        appointment.setAppointmentTime(java.time.LocalDateTime.now()); // Default to "NOW" for simplicity
-        return appointmentRepository.save(appointment);
+    public List<Barber> getBarbers() {
+        return bookingService.getAllBarbers();
     }
 
     @GetMapping("/appointments")
-    public List<com.barber.booking_service.entity.Appointment> getAllAppointments() {
-        // In a real app, we would filter by 'customerName', but this works for now!
-        return appointmentRepository.findAll();
+    public List<Appointment> getAppointments() {
+        return bookingService.getAllAppointments();
+    }
+
+    @PostMapping("/book")
+    public Appointment bookAppointment(@RequestBody Appointment appointment) {
+        return bookingService.createAppointment(appointment);
     }
 
     @DeleteMapping("/appointment/{id}")
-    public String deleteAppointment(@PathVariable Long id){
-        appointmentRepository.deleteById(id);
-        return "Delete Appointment Successfully.";
+    public String deleteAppointment(@PathVariable Long id) {
+        bookingService.cancelAppointment(id);
+        return "Appointment deleted successfully";
+    }
+
+    @PutMapping("/appointment/{id}/status")
+    public Appointment updateStatus(@PathVariable Long id, @RequestParam String status) {
+        return bookingService.updateAppointmentStatus(id, status);
     }
 }
